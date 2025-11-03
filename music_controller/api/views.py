@@ -114,7 +114,7 @@ class UpdateRoom(APIView):
 
             queryset = Room.objects.filter(code=code)
 
-            if not queryset.exist():
+            if not queryset.exists():
                 return Response({'msg': 'Room not found.'}, status=status.HTTP_404_NOT_FOUND)
 
             room = queryset[0]
