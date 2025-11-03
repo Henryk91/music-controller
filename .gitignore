@@ -68,3 +68,6 @@ dmypy.json
 
 # Local development #
 local_settings.py
+
+
+node_modules
