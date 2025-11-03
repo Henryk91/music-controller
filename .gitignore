@@ -1,0 +1,70 @@
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__/
+db.sqlite3
+media/
+staticfiles/
+.env
+
+# If using Django migrations, don't ignore them!
+# Uncomment the next line only if you want to reset migrations manually.
+# */migrations/
+
+# Python #
+*.py[cod]
+*$py.class
+__pycache__/
+
+# Unit test / coverage reports #
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Environment #
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDE / Editor #
+.vscode/
+.idea/
+*.swp
+*.swo
+*.bak
+
+# OS files #
+.DS_Store
+Thumbs.db
+
+# MyPy #
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker #
+.pyre/
+
+# pytype #
+.pytype/
+
+
+# VSCode settings #
+.vscode/
+
+# Local development #
+local_settings.py
