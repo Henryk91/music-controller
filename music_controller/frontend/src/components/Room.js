@@ -26,7 +26,7 @@ export default class Room extends Component {
   }
 
   componentDidMount() {
-    this.interval = setInterval(this.getCurrentSong, 5000);
+    this.interval = setInterval(this.getCurrentSong, 1000);
   }
 
   componentWillUnmount() {
