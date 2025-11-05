@@ -16,7 +16,7 @@ fi
 if [ ! -f ".env" ]; then
     echo "Error: .env file not found!"
     echo "Please create a .env file based on .env.example"
-    exit 1
+    # exit 1
 fi
 
 # Build frontend if needed
