@@ -163,7 +163,11 @@ export default class CreateRoomPage extends Component {
           </Collapse>
         </Grid>
         <Grid item xs={12} align="center">
-          <Typography component="h4" variant="h4">
+          <Typography 
+            component="h4" 
+            variant="h4"
+            style={{ fontSize: window.innerWidth < 600 ? '1.5rem' : '2.125rem' }}
+          >
             {title}
           </Typography>
         </Grid>
@@ -173,7 +177,7 @@ export default class CreateRoomPage extends Component {
               <div align="center">Guest Control of Playback State</div>
             </FormHelperText>
             <RadioGroup
-              row
+              row={window.innerWidth >= 600}
               defaultValue={this.props.guestCanPause.toString()}
               onChange={this.handleGuestCanPauseChange}
             >
@@ -198,7 +202,7 @@ export default class CreateRoomPage extends Component {
               <div align="center">Guest Control of Volume</div>
             </FormHelperText>
             <RadioGroup
-              row
+              row={window.innerWidth >= 600}
               defaultValue={this.props.guestCanControlVolume.toString()}
               onChange={this.handleGuestCanControlVolumeChange}
             >

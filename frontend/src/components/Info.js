@@ -25,15 +25,27 @@ export default function Info(props) {
     return () => console.log("cleanup");
   });
 
+  const isMobile = window.innerWidth < 600;
+  
   return (
     <Grid container spacing={1}>
       <Grid item xs={12} align="center">
-        <Typography component="h4" variant="h4">
+        <Typography 
+          component="h4" 
+          variant="h4"
+          style={{ fontSize: isMobile ? '1.5rem' : '2.125rem' }}
+        >
           What is House Party?
         </Typography>
       </Grid>
-      <Grid item xs={12} align="center">
-        <Typography variant="body1">
+      <Grid item xs={12} sm={10} md={8} align="center">
+        <Typography 
+          variant="body1"
+          style={{ 
+            fontSize: isMobile ? '0.875rem' : '1rem',
+            padding: isMobile ? '0 8px' : '0 16px'
+          }}
+        >
           {page === pages.JOIN ? joinInfo() : createInfo()}
         </Typography>
       </Grid>
@@ -42,6 +54,7 @@ export default function Info(props) {
           onClick={() => {
             page === pages.CREATE ? setPage(pages.JOIN) : setPage(pages.CREATE);
           }}
+          size={isMobile ? 'small' : 'medium'}
         >
           {page === pages.CREATE ? (
             <NavigateBeforeIcon />
@@ -50,8 +63,14 @@ export default function Info(props) {
           )}
         </IconButton>
       </Grid>
-      <Grid item xs={12} align="center">
-        <Button color="secondary" variant="contained" to="/" component={Link}>
+      <Grid item xs={12} sm={8} md={6} align="center">
+        <Button 
+          fullWidth
+          color="secondary" 
+          variant="contained" 
+          to="/" 
+          component={Link}
+        >
           Back
         </Button>
       </Grid>

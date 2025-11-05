@@ -35,22 +35,46 @@ export default class HomePage extends Component {
     return (
       <Grid container spacing={3}>
         <Grid item xs={12} align="center">
-          <Typography variant="h3" compact="h3">
+          <Typography variant="h3" compact="h3" style={{ fontSize: window.innerWidth < 600 ? '2rem' : '3rem' }}>
             House Party
           </Typography>
         </Grid>
-        <Grid item xs={12} align="center">
-          <ButtonGroup disableElevation variant="contained" color="primary">
-            <Button color="primary" to="/join" component={Link}>
-              Join a Room
-            </Button>
-            <Button color="default" to="/info" component={Link}>
-              Info
-            </Button>
-            <Button color="secondary" to="/create" component={Link}>
-              Create a Room
-            </Button>
-          </ButtonGroup>
+        <Grid item xs={12} sm={12} align="center">
+          <Grid container spacing={2} justify="center">
+            <Grid item xs={12} sm={4}>
+              <Button
+                fullWidth
+                color="primary"
+                variant="contained"
+                to="/join"
+                component={Link}
+              >
+                Join a Room
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Button
+                fullWidth
+                color="default"
+                variant="contained"
+                to="/info"
+                component={Link}
+              >
+                Info
+              </Button>
+            </Grid>
+            <Grid item xs={12} sm={4}>
+              <Button
+                fullWidth
+                color="secondary"
+                variant="contained"
+                to="/create"
+                component={Link}
+              >
+                Create a Room
+              </Button>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     );

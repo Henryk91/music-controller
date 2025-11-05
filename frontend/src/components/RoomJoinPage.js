@@ -14,15 +14,21 @@ export default class RoomJoinPage extends Component {
   }
 
   render() {
+    const isMobile = window.innerWidth < 600;
     return (
       <Grid container spacing={1}>
         <Grid item xs={12} align="center">
-          <Typography variant="h4" component="h4">
+          <Typography 
+            variant="h4" 
+            component="h4"
+            style={{ fontSize: isMobile ? '1.5rem' : '2.125rem' }}
+          >
             Join a Room
           </Typography>
         </Grid>
-        <Grid item xs={12} align="center">
+        <Grid item xs={12} sm={8} md={6} align="center">
           <TextField
+            fullWidth
             error={this.state.error}
             label="Code"
             placeholder="Enter a Room Code"
@@ -30,10 +36,18 @@ export default class RoomJoinPage extends Component {
             helperText={this.state.error}
             variant="outlined"
             onChange={this.handleTextFieldChange}
+            inputProps={{
+              style: { 
+                textAlign: 'center',
+                fontSize: isMobile ? '1rem' : '1.25rem',
+                textTransform: 'uppercase'
+              }
+            }}
           />
         </Grid>
-        <Grid item xs={12} align="center">
+        <Grid item xs={12} sm={8} md={6} align="center">
           <Button
+            fullWidth
             variant="contained"
             color="primary"
             onClick={this.roomButtonPressed}
@@ -41,8 +55,14 @@ export default class RoomJoinPage extends Component {
             Enter Room
           </Button>
         </Grid>
-        <Grid item xs={12} align="center">
-          <Button variant="contained" color="secondary" to="/" component={Link}>
+        <Grid item xs={12} sm={8} md={6} align="center">
+          <Button 
+            fullWidth
+            variant="contained" 
+            color="secondary" 
+            to="/" 
+            component={Link}
+          >
             Back
           </Button>
         </Grid>

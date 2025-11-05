@@ -150,15 +150,23 @@ export default class Room extends Component {
     return (
       <Grid container spacing={1}>
         <Grid item xs={12} align="center">
-          <Typography variant="h4" component="h4">
+          <Typography 
+            variant="h4" 
+            component="h4"
+            style={{ fontSize: window.innerWidth < 600 ? '1.5rem' : '2.125rem' }}
+          >
             Code: {this.roomCode}
           </Typography>
         </Grid>
-        <MusicPlayer 
-          {...this.state.song} 
-          isHost={this.state.isHost}
-          guestCanControlVolume={this.state.guestCanControlVolume}
-        />
+        <Grid item xs={12} align="center">
+          <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <MusicPlayer 
+              {...this.state.song} 
+              isHost={this.state.isHost}
+              guestCanControlVolume={this.state.guestCanControlVolume}
+            />
+          </div>
+        </Grid>
         {this.state.isHost ? this.renderSettingsButton() : null}
         <Grid item xs={12} align="center">
           <Button

@@ -97,36 +97,77 @@ export default class MusicPlayer extends Component {
 
   render() {
     const songProgress = (this.props.time / this.props.duration) * 100;
+    const isMobile = window.innerWidth < 600;
 
     return (
-      <Card>
-        <Grid container alignItems="center">
-          <Grid item align="center" xs={4}>
-            <img src={this.props.image_url} height="100%" width="100%" />
+      <Card style={{ 
+        padding: isMobile ? '8px' : '16px',
+        maxWidth: '100%',
+        width: '100%',
+        margin: '0 auto'
+      }}>
+        <Grid container alignItems="center" spacing={isMobile ? 1 : 2}>
+          <Grid item xs={12} sm={4} align="center">
+            <img 
+              src={this.props.image_url} 
+              height="100%" 
+              width="100%" 
+              style={{ maxWidth: isMobile ? '200px' : '100%', borderRadius: '4px' }}
+              alt="Album cover"
+            />
           </Grid>
-          <Grid item align="center" xs={8}>
-            <Typography component="h5" variant="h5">
+          <Grid item xs={12} sm={8} align="center">
+            <Typography 
+              component="h5" 
+              variant="h5"
+              style={{ 
+                fontSize: isMobile ? '1.1rem' : '1.5rem',
+                marginBottom: '4px',
+                wordBreak: 'break-word'
+              }}
+            >
               {this.props.title}
             </Typography>
-            <Typography color="textSecondary" variant="subtitle1">
+            <Typography 
+              color="textSecondary" 
+              variant="subtitle1"
+              style={{ 
+                fontSize: isMobile ? '0.9rem' : '1rem',
+                marginBottom: '8px',
+                wordBreak: 'break-word'
+              }}
+            >
               {this.props.artist}
             </Typography>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
               <IconButton
                 onClick={() => {
                   this.props.is_playing ? this.pauseSong() : this.playSong();
                 }}
+                size={isMobile ? 'small' : 'medium'}
               >
                 {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
               </IconButton>
-              <IconButton onClick={() => this.skipSong()}>
-                {this.props.votes} / {this.props.votes_required}
-                <SkipNextIcon />
+              <IconButton 
+                onClick={() => this.skipSong()}
+                size={isMobile ? 'small' : 'medium'}
+              >
+                <span style={{ fontSize: isMobile ? '0.75rem' : '0.875rem' }}>
+                  {this.props.votes} / {this.props.votes_required}
+                </span>
+                <SkipNextIcon style={{ fontSize: isMobile ? '1.2rem' : '1.5rem' }} />
               </IconButton>
             </div>
             {(this.props.isHost || this.props.guestCanControlVolume) && (
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: 10 }}>
-                <VolumeUpIcon style={{ marginRight: 8 }} />
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center', 
+                marginTop: 10,
+                width: '100%',
+                padding: isMobile ? '0 8px' : '0'
+              }}>
+                <VolumeUpIcon style={{ marginRight: 8, fontSize: isMobile ? '1.2rem' : '1.5rem' }} />
                 <Slider
                   value={this.state.volume}
                   onChange={this.handleVolumeChange}
@@ -136,14 +177,18 @@ export default class MusicPlayer extends Component {
                   onTouchEnd={this.handleVolumeChangeEnd}
                   min={0}
                   max={100}
-                  style={{ width: 150 }}
+                  style={{ width: isMobile ? 'calc(100% - 40px)' : 150, maxWidth: '200px' }}
                   aria-labelledby="volume-slider"
                 />
               </div>
             )}
           </Grid>
         </Grid>
-        <LinearProgress variant="determinate" value={songProgress} />
+        <LinearProgress 
+          variant="determinate" 
+          value={songProgress} 
+          style={{ marginTop: isMobile ? '8px' : '16px' }}
+        />
       </Card>
     );
   }
