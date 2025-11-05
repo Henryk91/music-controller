@@ -46,6 +46,11 @@ export default class MusicPlayer extends Component {
   }
 
   skipSong() {
+    // Prevent voting if user has already voted
+    if (this.props.user_has_voted) {
+      return;
+    }
+    
     const requestOptions = {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -150,17 +155,21 @@ export default class MusicPlayer extends Component {
               {this.props.artist}
             </Typography>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap' }}>
-              <IconButton
-                onClick={() => {
-                  this.props.is_playing ? this.pauseSong() : this.playSong();
-                }}
-                size={isMobile ? 'small' : 'medium'}
-              >
-                {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
-              </IconButton>
+              {(this.props.isHost || this.props.guestCanPause) && (
+                <IconButton
+                  onClick={() => {
+                    this.props.is_playing ? this.pauseSong() : this.playSong();
+                  }}
+                  size={isMobile ? 'small' : 'medium'}
+                >
+                  {this.props.is_playing ? <PauseIcon /> : <PlayArrowIcon />}
+                </IconButton>
+              )}
               <IconButton 
                 onClick={() => this.skipSong()}
                 size={isMobile ? 'small' : 'medium'}
+                disabled={this.props.user_has_voted || false}
+                title={this.props.user_has_voted ? 'You have already voted to skip this song' : 'Vote to skip'}
               >
                 <span style={{ fontSize: isMobile ? '0.75rem' : '0.875rem' }}>
                   {this.props.votes} / {this.props.votes_required}

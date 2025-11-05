@@ -170,6 +170,7 @@ export default class Room extends Component {
             <MusicPlayer 
               {...this.state.song} 
               isHost={this.state.isHost}
+              guestCanPause={this.state.guestCanPause}
               guestCanControlVolume={this.state.guestCanControlVolume}
             />
           </div>

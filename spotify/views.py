@@ -104,6 +104,12 @@ class CurrentSong(APIView):
             artist_string += name
         
         votes = Vote.objects.filter(room=room, song_id=song_id)
+        user_id = self.request.session.session_key
+        user_has_voted = Vote.objects.filter(
+            user=user_id,
+            room=room,
+            song_id=song_id
+        ).exists()
 
         song = {
             'title': item.get('name'),
@@ -115,7 +121,8 @@ class CurrentSong(APIView):
             'votes': votes.count(),
             'votes_required': room.votes_to_skip,
             'id': song_id,
-            'volume': volume_percent
+            'volume': volume_percent,
+            'user_has_voted': user_has_voted
         }
         self.update_room_song(room, song_id)
         return Response(song, status=status.HTTP_200_OK)
@@ -150,16 +157,39 @@ class SkipSong(APIView):
     def post(self, request, format=None):
         room_code = self.request.session.get('room_code')
         room = Room.objects.filter(code=room_code)[0]
-        votes = Vote.objects.filter(room=room, song_id=room.current_song)
+        user_id = self.request.session.session_key
+        current_song_id = room.current_song
+        
+        # Check if user has already voted for this song
+        existing_vote = Vote.objects.filter(
+            user=user_id, 
+            room=room, 
+            song_id=current_song_id
+        ).first()
+        
+        # If user has already voted (and is not host), do nothing
+        if existing_vote and user_id != room.host:
+            return Response({'message': 'You have already voted to skip this song'}, status=status.HTTP_200_OK)
+        
+        votes = Vote.objects.filter(room=room, song_id=current_song_id)
         votes_needed = room.votes_to_skip
 
-        if self.request.session.session_key == room.host or votes.count() + 1 >= votes_needed:
+        # Host can always skip
+        if user_id == room.host:
+            votes.delete()
+            skip_song(room.host)
+        # If adding this vote would reach the threshold, skip the song
+        elif votes.count() + 1 >= votes_needed:
             votes.delete()
             skip_song(room.host)
         else:
-            vote = Vote(user=self.request.session.session_key,
-                        room=room, song_id=room.current_song)
-            vote.save()
+            # User hasn't voted yet, create a new vote
+            try:
+                vote = Vote(user=user_id, room=room, song_id=current_song_id)
+                vote.save()
+            except Exception as e:
+                # Vote already exists (race condition or unique constraint violation), ignore
+                pass
         
         return Response({}, status=status.HTTP_204_NO_CONTENT)
 
