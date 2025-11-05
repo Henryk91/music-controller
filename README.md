@@ -30,9 +30,23 @@ A Django + React app for hosting shared listening rooms that control a Spotify p
 ## Environment Variables
 Create a `.env` file at the project root with:
 ```
+# Django Settings (for production, set DEBUG=False and provide SECRET_KEY)
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+
+# Spotify API Settings
 CLIENT_ID=your_spotify_client_id
 CLIENT_SECRET=your_spotify_client_secret
 REDIRECT_URI=http://localhost:8000/spotify/redirect
+```
+
+For production, update your `.env`:
+```
+DEBUG=False
+SECRET_KEY=your-production-secret-key-here
+ALLOWED_HOSTS=yourdomain.com,www.yourdomain.com
+REDIRECT_URI=https://yourdomain.com/spotify/redirect
 ```
 
 ## Backend Setup
@@ -100,10 +114,61 @@ Base paths are relative to `http://localhost:8000`.
 - OAuth redirect mismatch: The `REDIRECT_URI` in `.env` must match exactly the one configured in your Spotify app settings.
 - 403 on play/pause: Guests need the room setting "Guest Can Pause" enabled; otherwise only the host can control playback.
 
+## Production Deployment
+
+### Quick Start (Production)
+```bash
+# 1. Install dependencies
+pip install -r requirements.txt
+cd frontend && npm install && cd ..
+
+# 2. Build frontend
+cd frontend
+npm run build
+cd ..
+
+# 3. Collect static files
+python manage.py collectstatic --noinput
+
+# 4. Run migrations
+python manage.py migrate
+
+# 5. Start production server with Gunicorn
+gunicorn music_controller.wsgi:application --bind 0.0.0.0:8000 --workers 3
+```
+
+### Using Deployment Scripts
+```bash
+# Full deployment (builds frontend, collects static files, runs migrations)
+./deploy.sh
+
+# Run production server
+./run_production.sh
+```
+
+### Production Settings
+- Set `DEBUG=False` in your `.env` file
+- Set `SECRET_KEY` to a secure random key (use `python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"`)
+- Set `ALLOWED_HOSTS` to your domain(s)
+- Update `REDIRECT_URI` to your production domain
+- The app will automatically enable security settings (HSTS, secure cookies, etc.) when `DEBUG=False`
+
+### Production Server Options
+- **Gunicorn** (recommended): `gunicorn music_controller.wsgi:application --bind 0.0.0.0:8000`
+- **Django runserver** (development only): `python manage.py runserver 0.0.0.0:8000`
+
+### Static Files
+- Static files are automatically collected to `staticfiles/` directory
+- WhiteNoise middleware serves static files in production
+- Run `python manage.py collectstatic --noinput` after frontend builds
+
 ## Scripts Quick Reference
-- Backend: `python manage.py runserver`
-- Frontend dev: `npm run dev`
-- Frontend build: `npm run build`
+- **Development Backend**: `python manage.py runserver`
+- **Frontend dev**: `cd frontend && npm run dev`
+- **Frontend build**: `cd frontend && npm run build`
+- **Production**: `gunicorn music_controller.wsgi:application --bind 0.0.0.0:8000`
+- **Deploy**: `./deploy.sh`
+- **Run Production**: `./run_production.sh`
 
 ## License
 This project is for educational/demo purposes. Adapt licensing as needed.
