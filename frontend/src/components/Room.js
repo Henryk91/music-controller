@@ -29,10 +29,13 @@ export default class Room extends Component {
 
   componentDidMount() {
     this.interval = setInterval(this.getCurrentSong, 1000);
+    // Poll room details every 2 seconds to check for rule changes
+    this.roomInterval = setInterval(this.getRoomDetails, 5000);
   }
 
   componentWillUnmount() {
     clearInterval(this.interval);
+    clearInterval(this.roomInterval);
   }
 
   getRoomDetails() {
