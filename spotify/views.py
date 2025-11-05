@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from requests import Request, post
 from rest_framework import status
 from rest_framework.response import Response
-from .util import update_or_create_user_tokens, is_spotify_authenticated, get_user_tokens, execute_spotify_api_request, play_song, pause_song, skip_song
+from .util import update_or_create_user_tokens, is_spotify_authenticated, get_user_tokens, execute_spotify_api_request, play_song, pause_song, skip_song, set_volume
 from api.models import Room
 from spotify.models import Vote
 
@@ -84,6 +84,16 @@ class CurrentSong(APIView):
         album_cover = item.get('album').get('images')[0].get('url')
         is_playing = response.get('is_playing')
         song_id = item.get('id')
+        
+        # Try to get volume from currently-playing response
+        device = response.get('device')
+        volume_percent = device.get('volume_percent') if device and device.get('volume_percent') is not None else None
+        
+        # If volume not in currently-playing, fetch from player endpoint
+        if volume_percent is None:
+            player_response = execute_spotify_api_request(host, "player")
+            if 'device' in player_response and player_response.get('device'):
+                volume_percent = player_response.get('device').get('volume_percent')
 
         artist_string = ''
 
@@ -104,7 +114,8 @@ class CurrentSong(APIView):
             'is_playing': is_playing,
             'votes': votes.count(),
             'votes_required': room.votes_to_skip,
-            'id': song_id
+            'id': song_id,
+            'volume': volume_percent
         }
         self.update_room_song(room, song_id)
         return Response(song, status=status.HTTP_200_OK)
@@ -151,3 +162,28 @@ class SkipSong(APIView):
             vote.save()
         
         return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+class SetVolume(APIView):
+    def put(self, request, format=None):
+        room_code = self.request.session.get('room_code')
+        room = Room.objects.filter(code=room_code)
+        if not room.exists():
+            return Response({}, status=status.HTTP_404_NOT_FOUND)
+        
+        room = room[0]
+        volume_percent = request.data.get('volume_percent')
+        
+        if volume_percent is None:
+            return Response({'Bad Request': 'volume_percent parameter required'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Ensure volume is between 0 and 100
+        volume_percent = max(0, min(100, int(volume_percent)))
+        
+        if self.request.session.session_key == room.host or room.guest_can_control_volume:
+            success = set_volume(room.host, volume_percent)
+            if success:
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+            else:
+                return Response({'Error': 'Failed to set volume'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        return Response({}, status=status.HTTP_403_FORBIDDEN)

@@ -16,6 +16,7 @@ export default class CreateRoomPage extends Component {
   static defaultProps = {
     votesToSkip: 2,
     guestCanPause: true,
+    guestCanControlVolume: true,
     update: false,
     roomCode: null,
     updateCallback: () => {},
@@ -25,6 +26,7 @@ export default class CreateRoomPage extends Component {
     super(props);
     this.state = {
       guestCanPause: this.props.guestCanPause,
+      guestCanControlVolume: this.props.guestCanControlVolume,
       votesToSkip: this.props.votesToSkip,
       errorMsg: "",
       successMsg: "",
@@ -33,6 +35,7 @@ export default class CreateRoomPage extends Component {
     this.handleRoomButtonPressed = this.handleRoomButtonPressed.bind(this);
     this.handleVotesChange = this.handleVotesChange.bind(this);
     this.handleGuestCanPauseChange = this.handleGuestCanPauseChange.bind(this);
+    this.handleGuestCanControlVolumeChange = this.handleGuestCanControlVolumeChange.bind(this);
     this.handleUpdateButtonPressed = this.handleUpdateButtonPressed.bind(this);
   }
 
@@ -48,6 +51,12 @@ export default class CreateRoomPage extends Component {
     });
   }
 
+  handleGuestCanControlVolumeChange(e) {
+    this.setState({
+      guestCanControlVolume: e.target.value === "true" ? true : false,
+    });
+  }
+
   handleRoomButtonPressed() {
     const requestOptions = {
       method: "POST",
@@ -55,6 +64,7 @@ export default class CreateRoomPage extends Component {
       body: JSON.stringify({
         votes_to_skip: this.state.votesToSkip,
         guest_can_pause: this.state.guestCanPause,
+        guest_can_control_volume: this.state.guestCanControlVolume,
       }),
     };
     fetch("/api/create-room", requestOptions)
@@ -69,6 +79,7 @@ export default class CreateRoomPage extends Component {
       body: JSON.stringify({
         votes_to_skip: this.state.votesToSkip,
         guest_can_pause: this.state.guestCanPause,
+        guest_can_control_volume: this.state.guestCanControlVolume,
         code: this.props.roomCode,
       }),
     };
@@ -170,6 +181,31 @@ export default class CreateRoomPage extends Component {
                 value="true"
                 control={<Radio color="primary" />}
                 label="Play/Pause"
+                labelPlacement="bottom"
+              />
+              <FormControlLabel
+                value="false"
+                control={<Radio color="secondary" />}
+                label="No Control"
+                labelPlacement="bottom"
+              />
+            </RadioGroup>
+          </FormControl>
+        </Grid>
+        <Grid item xs={12} align="center">
+          <FormControl component="fieldset">
+            <FormHelperText>
+              <div align="center">Guest Control of Volume</div>
+            </FormHelperText>
+            <RadioGroup
+              row
+              defaultValue={this.props.guestCanControlVolume.toString()}
+              onChange={this.handleGuestCanControlVolumeChange}
+            >
+              <FormControlLabel
+                value="true"
+                control={<Radio color="primary" />}
+                label="Control Volume"
                 labelPlacement="bottom"
               />
               <FormControlLabel

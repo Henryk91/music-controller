@@ -94,3 +94,16 @@ def pause_song(session_id):
 
 def skip_song(session_id):
     return execute_spotify_api_request(session_id, 'player/next', post_=True)
+
+def set_volume(session_id, volume_percent):
+    tokens = get_user_tokens(session_id)
+    headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokens.access_token}
+    
+    response = put(BASE_URL + 'player/volume', 
+                   params={'volume_percent': volume_percent}, 
+                   headers=headers)
+    
+    try:
+        return response.status_code == 204
+    except:
+        return False

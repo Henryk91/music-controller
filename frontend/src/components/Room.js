@@ -9,6 +9,7 @@ export default class Room extends Component {
     this.state = {
       votesToSkip: 2,
       guestCanPause: false,
+      guestCanControlVolume: false,
       isHost: false,
       showSettings: false,
       spotifyAuthenticated: false,
@@ -46,6 +47,7 @@ export default class Room extends Component {
         this.setState({
           votesToSkip: data.votes_to_skip,
           guestCanPause: data.guest_can_pause,
+          guestCanControlVolume: data.guest_can_control_volume,
           isHost: data.is_host,
         });
         if (this.state.isHost) {
@@ -109,6 +111,7 @@ export default class Room extends Component {
             update={true}
             votesToSkip={this.state.votesToSkip}
             guestCanPause={this.state.guestCanPause}
+            guestCanControlVolume={this.state.guestCanControlVolume}
             roomCode={this.roomCode}
             updateCallback={this.getRoomDetails}
           />
@@ -151,7 +154,11 @@ export default class Room extends Component {
             Code: {this.roomCode}
           </Typography>
         </Grid>
-        <MusicPlayer {...this.state.song} />
+        <MusicPlayer 
+          {...this.state.song} 
+          isHost={this.state.isHost}
+          guestCanControlVolume={this.state.guestCanControlVolume}
+        />
         {this.state.isHost ? this.renderSettingsButton() : null}
         <Grid item xs={12} align="center">
           <Button
