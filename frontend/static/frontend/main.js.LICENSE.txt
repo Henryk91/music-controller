@@ -88,6 +88,10 @@
 
 /*! export PureComponent [provided] [no usage info] [provision prevents renaming (no use info)] -> ./node_modules/react/cjs/react.production.min.js .PureComponent */
 
+/*! export QRCodeCanvas [provided] [no usage info] [missing usage info prevents renaming] */
+
+/*! export QRCodeSVG [provided] [no usage info] [missing usage info prevents renaming] */
+
 /*! export Redirect [provided] [no usage info] [missing usage info prevents renaming] */
 
 /*! export Redirect [provided] [no usage info] [missing usage info prevents renaming] -> ./node_modules/react-router/esm/react-router.js .Redirect */
@@ -664,6 +668,10 @@
 
 /*!****************************************************!*\
   !*** ./node_modules/hyphenate-style-name/index.js ***!
+  \****************************************************/
+
+/*!****************************************************!*\
+  !*** ./node_modules/qrcode.react/lib/esm/index.js ***!
   \****************************************************/
 
 /*!*****************************************************!*\

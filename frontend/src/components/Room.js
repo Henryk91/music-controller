@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Grid, Button, Typography } from "@material-ui/core";
+import { QRCodeSVG } from "qrcode.react";
 import CreateRoomPage from "./CreateRoomPage";
 import MusicPlayer from "./MusicPlayer";
 
@@ -130,12 +131,14 @@ export default class Room extends Component {
   }
 
   renderSettingsButton() {
+    const isMobile = window.innerWidth < 600;
     return (
       <Grid item xs={12} align="center">
         <Button
           variant="contained"
           color="primary"
           onClick={() => this.updateShowSettings(true)}
+          size={isMobile ? 'medium' : 'small'}
         >
           Settings
         </Button>
@@ -147,18 +150,22 @@ export default class Room extends Component {
     if (this.state.showSettings) {
       return this.renderSettings();
     }
+    const joinUrl = `${window.location.origin}/join?code=${this.roomCode}`;
+    const isMobile = window.innerWidth < 600;
+    const qrSize = 150;
+
     return (
-      <Grid container spacing={1}>
-        <Grid item xs={12} align="center">
+      <Grid container spacing={isMobile ? 1 : 0}>
+        <Grid item xs={12} align="center" style={{ marginBottom: isMobile ? '8px' : '2px', padding: '0' }}>
           <Typography 
             variant="h4" 
             component="h4"
-            style={{ fontSize: window.innerWidth < 600 ? '1.5rem' : '2.125rem' }}
+            style={{ fontSize: isMobile ? '1.5rem' : '1.5rem', marginBottom: '0', lineHeight: '1.2' }}
           >
             Code: {this.roomCode}
           </Typography>
         </Grid>
-        <Grid item xs={12} align="center">
+        <Grid item xs={12} align="center" style={{ marginBottom: isMobile ? '8px' : '2px', padding: '0' }}>
           <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
             <MusicPlayer 
               {...this.state.song} 
@@ -167,15 +174,43 @@ export default class Room extends Component {
             />
           </div>
         </Grid>
-        {this.state.isHost ? this.renderSettingsButton() : null}
-        <Grid item xs={12} align="center">
+        {this.state.isHost ? (
+          <Grid item xs={12} align="center" style={{ marginBottom: isMobile ? '8px' : '2px', padding: '0' }}>
+            {this.renderSettingsButton()}
+          </Grid>
+        ) : null}
+        <Grid item xs={12} align="center" style={{ marginBottom: isMobile ? '8px' : '2px', padding: '0' }}>
           <Button
             variant="contained"
             color="secondary"
             onClick={this.leaveButtonPressed}
+            size={isMobile ? 'medium' : 'small'}
           >
             Leave Room
           </Button>
+        </Grid>
+        <Grid item xs={12} align="center" style={{ padding: '0' }}>
+          <div style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            alignItems: 'center',
+            marginTop: isMobile ? '24px' : '4px'
+          }}>
+            <QRCodeSVG 
+              value={joinUrl}
+              size={qrSize}
+              level="H"
+              includeMargin={true}
+              style={{ marginBottom: '2px' }}
+            />
+            <Typography 
+              variant="body2" 
+              color="textSecondary"
+              style={{ fontSize: isMobile ? '0.75rem' : '0.65rem', marginTop: '2px' }}
+            >
+              Scan to join room
+            </Typography>
+          </div>
         </Grid>
       </Grid>
     );

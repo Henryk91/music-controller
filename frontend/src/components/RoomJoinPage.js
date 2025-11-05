@@ -13,6 +13,15 @@ export default class RoomJoinPage extends Component {
     this.roomButtonPressed = this.roomButtonPressed.bind(this);
   }
 
+  componentDidMount() {
+    // Check for room code in URL parameters (from QR code)
+    const urlParams = new URLSearchParams(window.location.search);
+    const codeFromUrl = urlParams.get('code');
+    if (codeFromUrl) {
+      this.setState({ roomCode: codeFromUrl.toUpperCase() });
+    }
+  }
+
   render() {
     const isMobile = window.innerWidth < 600;
     return (

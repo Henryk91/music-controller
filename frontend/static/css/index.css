@@ -24,14 +24,23 @@ body {
 }
 
 .center {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  position: relative;
   width: 100%;
   max-width: 100%;
   padding: 16px;
   box-sizing: border-box;
+  min-height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 601px) {
+  .center {
+    align-items: flex-start;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
 }
 
 @media (max-width: 600px) {
@@ -41,13 +50,6 @@ body {
   
   .center {
     padding: 8px;
-    position: relative;
-    top: auto;
-    left: auto;
-    transform: none;
     min-height: calc(100vh - 16px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }

@@ -101,29 +101,37 @@ export default class MusicPlayer extends Component {
 
     return (
       <Card style={{ 
-        padding: isMobile ? '8px' : '16px',
+        padding: isMobile ? '8px' : '8px',
         maxWidth: '100%',
         width: '100%',
         margin: '0 auto'
       }}>
-        <Grid container alignItems="center" spacing={isMobile ? 1 : 2}>
-          <Grid item xs={12} sm={4} align="center">
+        <Grid container alignItems="center" spacing={isMobile ? 1 : 1}>
+          <Grid item xs={12} sm={3} align="center">
+            {this.props.image_url && (
             <img 
               src={this.props.image_url} 
-              height="100%" 
-              width="100%" 
-              style={{ maxWidth: isMobile ? '200px' : '100%', borderRadius: '4px' }}
+              style={{ 
+                maxWidth: isMobile ? '200px' : '300px',
+                maxHeight: isMobile ? '200px' : '300px',
+                width: 'auto',
+                height: 'auto',
+                borderRadius: '4px'
+              }}
               alt="Album cover"
             />
+          )}
           </Grid>
-          <Grid item xs={12} sm={8} align="center">
+          <Grid item xs={12} sm={9} align="center">
             <Typography 
               component="h5" 
               variant="h5"
               style={{ 
-                fontSize: isMobile ? '1.1rem' : '1.5rem',
-                marginBottom: '4px',
-                wordBreak: 'break-word'
+                fontSize: isMobile ? '1.1rem' : '1.1rem',
+                marginBottom: isMobile ? '4px' : '1px',
+                marginTop: isMobile ? '0' : '0',
+                wordBreak: 'break-word',
+                lineHeight: '1.2'
               }}
             >
               {this.props.title}
@@ -132,9 +140,11 @@ export default class MusicPlayer extends Component {
               color="textSecondary" 
               variant="subtitle1"
               style={{ 
-                fontSize: isMobile ? '0.9rem' : '1rem',
-                marginBottom: '8px',
-                wordBreak: 'break-word'
+                fontSize: isMobile ? '0.9rem' : '0.85rem',
+                marginBottom: isMobile ? '8px' : '2px',
+                marginTop: isMobile ? '0' : '0',
+                wordBreak: 'break-word',
+                lineHeight: '1.2'
               }}
             >
               {this.props.artist}
@@ -163,11 +173,11 @@ export default class MusicPlayer extends Component {
                 display: 'flex', 
                 alignItems: 'center', 
                 justifyContent: 'center', 
-                marginTop: 10,
+                marginTop: isMobile ? 10 : 4,
                 width: '100%',
                 padding: isMobile ? '0 8px' : '0'
               }}>
-                <VolumeUpIcon style={{ marginRight: 8, fontSize: isMobile ? '1.2rem' : '1.5rem' }} />
+                <VolumeUpIcon style={{ marginRight: 8, fontSize: isMobile ? '1.2rem' : '1.1rem' }} />
                 <Slider
                   value={this.state.volume}
                   onChange={this.handleVolumeChange}
@@ -177,7 +187,7 @@ export default class MusicPlayer extends Component {
                   onTouchEnd={this.handleVolumeChangeEnd}
                   min={0}
                   max={100}
-                  style={{ width: isMobile ? 'calc(100% - 40px)' : 150, maxWidth: '200px' }}
+                  style={{ width: isMobile ? 'calc(100% - 40px)' : 120, maxWidth: '200px' }}
                   aria-labelledby="volume-slider"
                 />
               </div>
@@ -187,7 +197,7 @@ export default class MusicPlayer extends Component {
         <LinearProgress 
           variant="determinate" 
           value={songProgress} 
-          style={{ marginTop: isMobile ? '8px' : '16px' }}
+          style={{ marginTop: isMobile ? '8px' : '4px' }}
         />
       </Card>
     );
