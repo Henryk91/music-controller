@@ -17,7 +17,6 @@ BASE_URL = "https://api.spotify.com/v1/me/"
 
 def get_user_tokens(session_id):
     user_tokens = SpotifyToken.objects.filter(user=session_id)
-    print(user_tokens)
     if user_tokens.exists():
         return user_tokens[0]
     else:
@@ -72,6 +71,8 @@ def refresh_spotify_token(session_id):
 
 def execute_spotify_api_request(session_id, endpoint, post_=False, put_=False):
     tokens = get_user_tokens(session_id)
+    if not tokens:
+        return {'Error': 'User not authenticated'}
     headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokens.access_token}
 
     if post_:
@@ -97,6 +98,8 @@ def skip_song(session_id):
 
 def set_volume(session_id, volume_percent):
     tokens = get_user_tokens(session_id)
+    if not tokens:
+        return {'Error': 'User not authenticated'}
     headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + tokens.access_token}
     
     response = put(BASE_URL + 'player/volume', 

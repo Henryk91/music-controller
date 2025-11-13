@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from urllib.parse import urlparse
 import os
 from dotenv import load_dotenv
 
@@ -80,12 +81,32 @@ WSGI_APPLICATION = 'music_controller.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+DEFAULT_SQLITE_DB = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': BASE_DIR / 'db.sqlite3',
 }
+
+database_url = os.getenv('DATABASE_URL')
+postgres_sslmode = os.getenv('DB_SSLMODE', 'require')
+
+db_from_url = None
+if database_url:
+    parsed = urlparse(database_url)
+    if parsed.scheme.startswith('postgres'):
+        db_from_url = {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': parsed.path[1:],
+            'USER': parsed.username,
+            'PASSWORD': parsed.password,
+            'HOST': parsed.hostname,
+            'PORT': parsed.port or '5432',
+            'OPTIONS': {'sslmode': postgres_sslmode},
+        }
+
+if db_from_url:
+    DATABASES = {'default': db_from_url}
+else:
+    DATABASES = {'default': DEFAULT_SQLITE_DB}
 
 
 # Password validation

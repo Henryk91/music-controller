@@ -39,6 +39,9 @@ ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 CLIENT_ID=your_spotify_client_id
 CLIENT_SECRET=your_spotify_client_secret
 REDIRECT_URI=http://localhost:8000/spotify/redirect
+
+# Database (optional – SQLite is used when these stay empty)
+DATABASE_URL=postgres://<user>:<password>@<host>/<db_name>
 ```
 
 For production, update your `.env`:
