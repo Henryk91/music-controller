@@ -1,6 +1,7 @@
 # House Party – Music Controller
 
 A Django + React app for hosting shared listening rooms that control a Spotify playback session. The host authenticates with Spotify; guests can join via a short room code, see the currently playing track, play/pause (if allowed), and vote to skip.
+A demo version can be found at https://music-controller.henryk.co.za
 
 ## Features
 - Room management (create, join, update settings, leave)
