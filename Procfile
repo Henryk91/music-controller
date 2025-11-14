@@ -1,1 +1,1 @@
-web: gunicorn music_controller.wsgi:application --bind 0.0.0.0:8000 --workers 3 --timeout 120
+web: gunicorn music_controller.wsgi:application --workers 3 --timeout 120
