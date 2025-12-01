@@ -16,10 +16,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import FileResponse
+from django.conf import settings
+from pathlib import Path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('', include('frontend.urls')),
     path('spotify/', include('spotify.urls')),
+]
+
+def robots_txt(request):
+    path = Path(settings.BASE_DIR) / "robots.txt"
+    response = FileResponse(open(path, "rb"))
+    response["Content-Type"] = "text/plain"
+    return response
+
+urlpatterns += [
+    path("robots.txt", robots_txt),
 ]
